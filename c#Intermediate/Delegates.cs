@@ -11,7 +11,7 @@ public class Calculator
 class Program
 {
 
-        public static void Main(string[] args)
+        public static void MainTest(string[] args)
         {
             del del1 = Add;
             ExecutingClass exe1 = new ExecutingClass();
