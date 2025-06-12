@@ -1,0 +1,8 @@
+
+export const FETCH_TODOS_PENDING = "FETCH_TODO_PENDING";
+export const FETCH_TODOS_SUCCESS= "FETCH_TODO_SUCCESS";
+export const FETCH_TODOS_FAILED = "FETCH_TODO_FAILED";
+export const ADD_TODO = "ADD_TODO";
+export const REMOVE_TODO = "REMOVE_TODO"
+
+
