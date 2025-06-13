@@ -1,0 +1,6 @@
+@DepInjASP_HostAddress = http://localhost:5251
+
+GET {{DepInjASP_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
