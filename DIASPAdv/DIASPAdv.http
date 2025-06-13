@@ -1,0 +1,6 @@
+@DIASPAdv_HostAddress = http://localhost:5020
+
+GET {{DIASPAdv_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

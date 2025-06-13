@@ -2,7 +2,7 @@ namespace LINQ
 {
     class LINQ
     {
-        static void Main(string[] args)
+        static void MainTest(string[] args)
         {
             List<Person> people = DataManager.GetPeople();
             List<Student> students = DataManager.GetStudents();
