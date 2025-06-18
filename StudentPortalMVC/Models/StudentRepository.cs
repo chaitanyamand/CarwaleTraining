@@ -16,5 +16,12 @@ namespace StudentPortal.Models
 
         public Student? GetById(int id) =>
             _students.FirstOrDefault(s => s.Id == id);
+
+        public void Add(Student student)
+        {
+            student.Id = _students.Max(s => s.Id) + 1;
+            _students.Add(student);
+        }
+
     }
 }

@@ -1,0 +1,11 @@
+@model StudentPortal.ViewModels.StudentFormViewModel
+
+<h2>@Model.PageTitle</h2>
+
+<form asp-action="Create" method="post">
+    <partial name="_StudentForm" model="Model" />
+    
+    <button type="submit" class="submit-button">Save</button>
+</form>
+
+<a asp-action="Index" style="margin-top: 25px; display: inline-block;">Back to List</a>

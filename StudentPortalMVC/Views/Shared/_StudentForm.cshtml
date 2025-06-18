@@ -1,0 +1,14 @@
+@model StudentFormViewModel
+
+
+<div>
+    <label asp-for="Name"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div>
+    <label asp-for="Course"></label>
+    <input asp-for="Course" class="form-control" />
+    <span asp-validation-for="Course" class="text-danger"></span>
+</div>
