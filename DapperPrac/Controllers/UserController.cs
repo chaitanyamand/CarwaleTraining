@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using DapperPrac.Dtos;
 using DapperPrac.Models;
 using DapperPrac.Repositories;
+using AutoMapper;
 
 namespace DapperPrac.Controllers
 {
@@ -10,22 +11,19 @@ namespace DapperPrac.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userRepository.GetUsers();
-            var userDtos = users.Select(u => new UserDto
-            {
-                Id = u.Id,
-                Username = u.Username,
-                Email = u.Email
-            });
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
             return Ok(userDtos);
         }
 
@@ -35,33 +33,18 @@ namespace DapperPrac.Controllers
             var user = await _userRepository.GetUser(id);
             if (user == null) return NotFound();
 
-            var userDto = new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
-            };
+            var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserDto createDto)
         {
-            var user = new User
-            {
-                Username = createDto.Username,
-                Email = createDto.Email
-            };
+            var user = _mapper.Map<User>(createDto);
 
             await _userRepository.CreateUser(user);
 
-            var userDto = new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
-            };
-
+            var userDto = _mapper.Map<UserDto>(user);
             return CreatedAtAction(nameof(GetUser), new { id = userDto.Id }, userDto);
         }
 

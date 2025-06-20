@@ -1,3 +1,4 @@
+using DapperPrac.Mappings;
 using DapperPrac.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<DapperPrac.Data.DapperContext>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 var app = builder.Build();
 
