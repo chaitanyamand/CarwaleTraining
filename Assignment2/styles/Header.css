@@ -1,0 +1,39 @@
+.header-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  background-color: white;
+  padding: 1.0625rem 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.sort-label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.sort-select {
+  padding: 0.5rem 0.75rem;
+  border: 0.0625rem solid #ddd;
+  border-radius: 0.25rem;
+  background-color: white;
+  font-size: 1rem;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #1976d2;
+}
+
+.sort-select:hover {
+  scale: 1.02;
+  transition: all 0.1s ease-in-out;
+}

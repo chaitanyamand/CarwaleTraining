@@ -1,0 +1,121 @@
+.car-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.car-tag {
+  position: absolute;
+  top: 0.625rem;
+  left: 0.625rem;
+  background-color: #ff6b35;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  z-index: 1;
+}
+
+.heart-btn {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.car-image,
+.image-fallback {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #f0f0f0;
+  object-fit: cover;
+}
+
+.image-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.car-info {
+  padding: 0.9375rem;
+}
+
+.car-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 550;
+  color: #333;
+}
+
+.car-meta {
+  display: flex;
+  gap: 2%;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.car-price-offer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.625rem;
+}
+
+.car-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.make-offer-btn {
+  margin-left: 0.625rem;
+  padding: 0.25rem 0.5rem;
+  background-color: white;
+  color: #1976d2;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.car-emi {
+  font-size: 1rem;
+  color: #666;
+}
+
+.car-emi span {
+  color: #1976d2;
+  font-weight: 700;
+}
+
+.view-seller-btn {
+  width: 100%;
+  background-color: #e84133;
+  border: none;
+  border-radius: 5%;
+  height: 2.5rem;
+  color: white;
+  margin-top: 7%;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+}

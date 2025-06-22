@@ -1,0 +1,10 @@
+.popular-choice-btn {
+  padding: 0.5rem 0.75rem;
+  border: 0.0625rem solid #ddd;
+  border-radius: 0.25rem;
+  background-color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #8a8787;
+  box-sizing: border-box;
+}

@@ -1,0 +1,16 @@
+.fuel-filter {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 4%;
+}
+
+.fuel-checkbox {
+  cursor: pointer;
+}
+
+.fuel-label {
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  color: #333;
+}

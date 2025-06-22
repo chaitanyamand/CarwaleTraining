@@ -1,0 +1,33 @@
+.cars-grid-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.625rem;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 1.25rem;
+}
+
+@media (min-width: 768px) and (max-width: 1050px) {
+  .cars-grid {
+    grid-template-columns: 1fr;
+  }
+}

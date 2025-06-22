@@ -1,0 +1,52 @@
+.filter-sidebar {
+  width: 19rem;
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 1.25rem;
+  box-sizing: border-box;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.filter-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  color: #0078d4;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.popular-price-range {
+  margin-top: 1.5625rem;
+}
+
+.popular-price-range h5 {
+  margin: 0 0 0.625rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+}
+
+.popular-price-buttons {
+  display: flex;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
