@@ -4,7 +4,7 @@ using StocksAPI.DTOs;
 
 namespace StocksAPI.Controllers
 {
-    // Controller for handling stock-related API endpoints
+    /* Controller for handling stock-related API endpoints */
     [ApiController]
     [Route("api/[controller]")]
     public class StocksController : ControllerBase
@@ -12,14 +12,18 @@ namespace StocksAPI.Controllers
         private readonly IStockBAL _stockBAL;
         private readonly ILogger<StocksController> _logger;
 
+        /* Constructor with dependency injection */
         public StocksController(IStockBAL stockBAL, ILogger<StocksController> logger)
         {
             _stockBAL = stockBAL ?? throw new ArgumentNullException(nameof(stockBAL));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        // Search stocks based on filters
-        [HttpGet("search")]
+        /* 
+         * GET: api/stocks
+         * Search stocks based on provided query filters
+         */
+        [HttpGet]
         [ProducesResponseType(typeof(StockSearchResponseDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
@@ -49,7 +53,10 @@ namespace StocksAPI.Controllers
             }
         }
 
-        // Get stock details by ID
+        /*
+         * GET: api/stocks/{id}
+         * Retrieve details of a stock by its ID
+         */
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(StockDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -85,7 +92,10 @@ namespace StocksAPI.Controllers
             }
         }
 
-        // Health check endpoint
+        /*
+         * GET: api/stocks/health
+         * Health check endpoint to verify service status
+         */
         [HttpGet("health")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         public IActionResult HealthCheck()

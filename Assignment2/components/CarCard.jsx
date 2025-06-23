@@ -36,7 +36,7 @@ export const CarCard = ({ car, id, isLiked }) => {
 
       <div className="car-info">
         <h3 className="car-title">
-          {car.makeYear} {car.carName}
+           {car.carName}
         </h3>
 
         <div className="car-meta">

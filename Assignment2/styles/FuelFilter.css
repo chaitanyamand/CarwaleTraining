@@ -9,6 +9,11 @@
   cursor: pointer;
 }
 
+.fuel-checkbox:checked {
+  color: grey;
+  background-color: grey;
+}
+
 .fuel-label {
   font-size: 1rem;
   margin-left: 0.5rem;

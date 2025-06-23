@@ -5,34 +5,47 @@ using StocksAPI.Entities;
 
 namespace StocksAPI.BAL
 {
-    // Interface for Stock Business Access Layer
+    /*
+     * Interface for Stock Business Access Layer (BAL).
+     * Defines contract for stock-related business logic.
+     */
     public interface IStockBAL
     {
+        /* Performs search for stocks with filters and returns paginated result */
         Task<StockSearchResponseDTO> SearchStocksAsync(StockSearchRequestDTO request);
+
+        /* Retrieves a specific stock by ID */
         Task<StockDTO?> GetStockByIdAsync(int id);
     }
 
-    // Implementation of Stock Business Access Layer
+    /*
+     * Implementation of IStockBAL.
+     * Contains business logic for searching and retrieving stock data.
+     */
     public class StockBAL : IStockBAL
     {
-        private readonly IStockDAL _stockDAL;
-        private readonly IMapper _mapper;
+        private readonly IStockDAL _stockDAL;     // DAL layer for data operations
+        private readonly IMapper _mapper;         // AutoMapper instance for DTO <-> Entity conversions
 
+        // Constructor with dependencies injected
         public StockBAL(IStockDAL stockDAL, IMapper mapper)
         {
             _stockDAL = stockDAL ?? throw new ArgumentNullException(nameof(stockDAL));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Search stocks based on filters and return paginated response
+        /*
+         * Searches for stocks based on filters in request.
+         * Returns paginated stock list along with metadata.
+         */
         public async Task<StockSearchResponseDTO> SearchStocksAsync(StockSearchRequestDTO request)
         {
             try
             {
-                // Map DTO to Filters entity
+                // Map input DTO to internal Filters entity
                 var filters = _mapper.Map<Filters>(request);
 
-                // Get stocks and total count
+                // Run queries in parallel: stocks list and total count
                 var stocksTask = _stockDAL.GetStocksAsync(filters, request.PageNumber, request.PageSize);
                 var countTask = _stockDAL.GetStocksCountAsync(filters);
 
@@ -41,16 +54,22 @@ namespace StocksAPI.BAL
                 var stocks = await stocksTask;
                 var totalCount = await countTask;
 
-                // Map stocks to DTOs and set IsValueForMoney
+                // Map entity list to DTOs
                 var stockDTOs = _mapper.Map<List<StockDTO>>(stocks);
+
+                // Apply business rule for each stock
                 foreach (var stockDTO in stockDTOs)
                 {
-                    stockDTO.IsValueForMoney = DetermineValueForMoney(stocks.First(s => s.Id == stockDTO.Id));
+                    // Determine if it's value for money using stock entity (not DTO)
+                    stockDTO.IsValueForMoney = DetermineValueForMoney(
+                        stocks.First(s => s.Id == stockDTO.ProfileId)
+                    );
                 }
 
-                // Calculate pagination info
+                // Calculate total number of pages
                 var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
 
+                // Return fully constructed response DTO
                 return new StockSearchResponseDTO
                 {
                     Stocks = stockDTOs,
@@ -59,25 +78,32 @@ namespace StocksAPI.BAL
                     PageSize = request.PageSize,
                     TotalPages = totalPages,
                     HasNextPage = request.PageNumber < totalPages,
-                    HasPreviousPage = request.PageNumber > 1
+                    HasPreviousPage = request.PageNumber > 1,
                 };
             }
             catch (Exception ex)
             {
+                // Wrap and rethrow as business-layer-specific exception
                 throw new InvalidOperationException("Error occurred while searching stocks", ex);
             }
         }
 
-        // Get stock by ID and return DTO
+        /*
+         * Fetches stock data by ID and returns as DTO.
+         */
         public async Task<StockDTO?> GetStockByIdAsync(int id)
         {
             try
             {
+                // Fetch from DB
                 var stock = await _stockDAL.GetStockByIdAsync(id);
                 if (stock == null)
                     return null;
 
+                // Map entity to DTO
                 var stockDTO = _mapper.Map<StockDTO>(stock);
+
+                // Apply business rule
                 stockDTO.IsValueForMoney = DetermineValueForMoney(stock);
 
                 return stockDTO;
@@ -88,10 +114,13 @@ namespace StocksAPI.BAL
             }
         }
 
-        // Determine if a stock is value for money based on business rules
+        /*
+         * Business rule to determine "value for money":
+         * Less than 10,000 km driven AND price under 2 lakh.
+         * NOTE: This is a placeholder and can be adjusted.
+         */
         private static bool DetermineValueForMoney(Stock stock)
         {
-            // Business rule: kms < 10000 and price < 2L (200000) (Will Be Definitely Changed)
             return stock.Kilometers < 10000 && stock.Price < 200000;
         }
     }

@@ -8,10 +8,10 @@ export const fetchProducts = () => {
         const fuelSelected = Array.from(filter.fuelSelected);
         const [minPrice, maxPrice] = filter.priceRange;
 
-        const fuelParam = fuelSelected.join("+");
+        const fuelParam = encodeURIComponent(fuelSelected.join("+"));
         const budgetParam = `${minPrice}-${maxPrice}`;
 
-        const url = `https://stg.carwale.com/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
+        const url = `http://localhost:5000/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
 
         fetch(url)
             .then((res) => res.json())
