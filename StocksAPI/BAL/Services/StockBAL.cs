@@ -2,22 +2,12 @@ using AutoMapper;
 using StocksAPI.DAL;
 using StocksAPI.DTOs;
 using StocksAPI.Entities;
+using FinanceService.Protos;
+using StocksAPI.BAL.Interfaces;
+using StocksAPI.DAL.Interfaces;
 
-namespace StocksAPI.BAL
+namespace StocksAPI.BAL.Services
 {
-    /*
-     * Interface for Stock Business Access Layer (BAL).
-     * Defines contract for stock-related business logic.
-     */
-    public interface IStockBAL
-    {
-        /* Performs search for stocks with filters and returns paginated result */
-        Task<StockSearchResponseDTO> SearchStocksAsync(StockSearchRequestDTO request);
-
-        /* Retrieves a specific stock by ID */
-        Task<StockDTO?> GetStockByIdAsync(int id);
-    }
-
     /*
      * Implementation of IStockBAL.
      * Contains business logic for searching and retrieving stock data.
@@ -26,12 +16,14 @@ namespace StocksAPI.BAL
     {
         private readonly IStockDAL _stockDAL;     // DAL layer for data operations
         private readonly IMapper _mapper;         // AutoMapper instance for DTO <-> Entity conversions
+        private readonly FinanceService.Protos.Finance.FinanceClient _grpcClient;  //GRPC Client 
 
         // Constructor with dependencies injected
-        public StockBAL(IStockDAL stockDAL, IMapper mapper)
+        public StockBAL(IStockDAL stockDAL, IMapper mapper, FinanceService.Protos.Finance.FinanceClient grpcClient)
         {
             _stockDAL = stockDAL ?? throw new ArgumentNullException(nameof(stockDAL));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _grpcClient = grpcClient;
         }
 
         /*
@@ -57,13 +49,24 @@ namespace StocksAPI.BAL
                 // Map entity list to DTOs
                 var stockDTOs = _mapper.Map<List<StockDTO>>(stocks);
 
-                // Apply business rule for each stock
+
+                var carIds = stocks.Select(s => s.Id).ToList();
+
+                var grpcRequest = new ValueForMoneyRequest();
+                grpcRequest.CarIds.AddRange(carIds);
+
+                // Use RPC Server To Determine Business Logic Value
+                var grpcResponse = await _grpcClient.GetIsValueForMoneyAsync(grpcRequest);
+
+                // Map the result back to DTOs
+                var valueMap = grpcResponse.CarStatuses.ToDictionary(c => c.Id, c => c.IsValueForMoney);
+
                 foreach (var stockDTO in stockDTOs)
                 {
-                    // Determine if it's value for money using stock entity (not DTO)
-                    stockDTO.IsValueForMoney = DetermineValueForMoney(
-                        stocks.First(s => s.Id == stockDTO.ProfileId)
-                    );
+                    if (valueMap.TryGetValue(stockDTO.ProfileId, out var isValue))
+                    {
+                        stockDTO.IsValueForMoney = isValue;
+                    }
                 }
 
                 // Calculate total number of pages

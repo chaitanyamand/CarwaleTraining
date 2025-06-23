@@ -1,8 +1,10 @@
-using StocksAPI.BAL;
-using StocksAPI.DAL;
 using StocksAPI.Mappings;
 using StocksAPI.Data;
 using Dapper;
+using StocksAPI.DAL.Interfaces;
+using StocksAPI.BAL.Interfaces;
+using StocksAPI.BAL.Services;
+using StocksAPI.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
+        policy.WithOrigins("http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -23,6 +25,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddGrpcClient<FinanceService.Protos.Finance.FinanceClient>(o =>
+{
+    o.Address = new Uri("http://localhost:5021");
+});
+
 
 // Configure Dapper to use a custom type handler for List<string>
 SqlMapper.AddTypeHandler(new JsonListTypeHandler());

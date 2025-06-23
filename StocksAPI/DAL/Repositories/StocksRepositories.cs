@@ -3,17 +3,10 @@ using StocksAPI.Entities;
 using StocksAPI.Enums;
 using StocksAPI.Data;
 using System.Data;
+using StocksAPI.DAL.Interfaces;
 
-namespace StocksAPI.DAL
+namespace StocksAPI.DAL.Repositories
 {
-    /* Interface that defines the contract for the Stock Data Access Layer */
-    public interface IStockDAL
-    {
-        Task<List<Stock>> GetStocksAsync(Filters filters, int pageNumber, int pageSize);
-        Task<int> GetStocksCountAsync(Filters filters);
-        Task<Stock?> GetStockByIdAsync(int id);
-    }
-
     /* Implementation of the Stock Data Access Layer using Dapper and MySQL */
     public class StockDAL : IStockDAL
     {
@@ -113,7 +106,7 @@ namespace StocksAPI.DAL
 
             /* Fuel type filter (e.g., Petrol, Diesel) */
             if (filters.FuelTypes != null && filters.FuelTypes.Any())
-        {
+            {
                 conditions.Add($"FuelType IN @FuelTypes");
                 parameters.Add("FuelTypes", filters.FuelTypes.Select(ft => (int)ft).ToArray());
             }

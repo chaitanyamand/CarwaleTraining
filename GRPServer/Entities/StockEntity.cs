@@ -1,11 +1,8 @@
-using StocksAPI.Enums;
+using FinanceService.Enums;
 
-namespace StocksAPI.Entities
+namespace FinanceService.Entities
 {
-    /*
-     * Entity representing a stock item (i.e., a car listing).
-     * This is the core database model.
-     */
+
     public class Stock
     {
         /* Unique stock ID */
@@ -27,11 +24,10 @@ namespace StocksAPI.Entities
         public int Kilometers { get; set; }
 
         /* Fuel type (enum) */
-        public FuelType FuelType { get; set; }
+        public FuelEnum FuelType { get; set; }
 
         /* Location (city, region) */
         public string CityName { get; set; } = string.Empty;
-
 
         /* Record creation date (for sorting or audit) */
         public DateTime CreatedDate { get; set; }
@@ -44,9 +40,11 @@ namespace StocksAPI.Entities
 
         /* Optional additional images (e.g., interior, rear view) */
         public List<string> StockImages { get; set; } = new List<string>();
+
         /* Formatted EMI text for display */
         public string EmiText { get; set; } = string.Empty;
 
+        /* Additional tags or labels for the stock (e.g., "New", "Featured") */
         public string TagText { get; set; } = string.Empty;
     }
 }

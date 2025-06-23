@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StocksAPI.BAL;
+using StocksAPI.BAL.Interfaces;
 using StocksAPI.DTOs;
 
 namespace StocksAPI.Controllers

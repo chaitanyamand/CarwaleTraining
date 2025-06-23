@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "FinanceService.Protos";
+
+package finance;
+
+// The finance service definition
+service Finance {
+  // RPC to check if cars are value for money
+  rpc GetIsValueForMoney (ValueForMoneyRequest) returns (ValueForMoneyResponse);
+}
+
+// Request message containing car IDs
+message ValueForMoneyRequest {
+  repeated int32 car_ids = 1;
+}
+
+// Response message containing car status list
+message ValueForMoneyResponse {
+  repeated CarStatus car_statuses = 1;
+}
+
+// Car status containing ID and value for money indicator
+message CarStatus {
+  int32 id = 1;
+  bool is_value_for_money = 2;
+}

@@ -1,12 +1,11 @@
 using System.Data;
 using MySql.Data.MySqlClient;
-using Microsoft.Extensions.Configuration;
 
 namespace StocksAPI.Data
 {
     /*
      * DapperContext is a central utility class for managing Dapper-based database connections.
-     * It reads the connection string from configuration (appsettings.json) and provides a method
+     * It reads the connection string from configuration and provides a method
      * to instantiate MySQL connections as IDbConnection, enabling Dapper usage across the project.
      */
     public class DapperContext
@@ -27,10 +26,6 @@ namespace StocksAPI.Data
         /*
          * CreateConnection creates and returns a new MySQL connection using the connection string.
          * Caller is responsible for managing the connection lifecycle (i.e., opening and disposing).
-         *
-         * Usage Example:
-         * using var connection = _context.CreateConnection();
-         * await connection.QueryAsync(...);
          */
         public IDbConnection CreateConnection()
         {
