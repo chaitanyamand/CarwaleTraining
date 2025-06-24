@@ -30,7 +30,8 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
 
   return (
     <div className="car-card">
-      {car.tagText && <div className="car-tag">{car.tagText}</div>}
+      {car.isValueForMoney ? <div className="car-tag value-tag">Value For Money</div> : car.tagText ?
+        <div className="car-tag">{car.tagText}</div> : null}
 
       <button
         onClick={() =>

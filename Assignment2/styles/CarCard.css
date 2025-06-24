@@ -19,6 +19,11 @@
   z-index: 1;
 }
 
+.value-tag {
+  background-color: rgb(34, 208, 34);
+
+}
+
 .heart-btn {
   position: absolute;
   top: 0.625rem;

@@ -52,6 +52,20 @@ namespace StocksAPI.BAL.Services
 
                 var carIds = stocks.Select(s => s.Id).ToList();
 
+                if (!carIds.Any())
+                {
+                    return new StockSearchResponseDTO
+                    {
+                        Stocks = new List<StockDTO>(),
+                        TotalCount = 0,
+                        PageNumber = request.PageNumber,
+                        PageSize = request.PageSize,
+                        TotalPages = 0,
+                        HasNextPage = false,
+                        HasPreviousPage = false
+                    };
+                }
+
                 var grpcRequest = new ValueForMoneyRequest();
                 grpcRequest.CarIds.AddRange(carIds);
 
@@ -105,9 +119,16 @@ namespace StocksAPI.BAL.Services
 
                 // Map entity to DTO
                 var stockDTO = _mapper.Map<StockDTO>(stock);
+                
+                // Prepare gRPC request to determine value for money    
+                var grpcRequest = new ValueForMoneyRequest();
+                grpcRequest.CarIds.Add(stock.Id);
 
-                // Apply business rule
-                stockDTO.IsValueForMoney = DetermineValueForMoney(stock);
+                // Call gRPC service to get value for money status
+                var grpcResponse = await _grpcClient.GetIsValueForMoneyAsync(grpcRequest);
+                var carStatus = grpcResponse.CarStatuses.FirstOrDefault(c => c.Id == stock.Id);
+
+                stockDTO.IsValueForMoney = carStatus?.IsValueForMoney ?? false; 
 
                 return stockDTO;
             }

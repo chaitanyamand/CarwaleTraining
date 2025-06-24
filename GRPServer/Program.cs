@@ -6,6 +6,7 @@ using FinanceService.DAL.Repositories;
 using FinanceService.BAL.Interfaces;
 using FinanceService.BAL.Repositories;
 using StocksAPI.Data;
+using Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddGrpc();
 
 // Add Dapper Context
 builder.Services.AddSingleton<DapperContext>();
+SqlMapper.AddTypeHandler(new JsonListTypeHandler());
 
 // Register repository with ILogger
 builder.Services.AddScoped<IStockDAL, StockDAL>();
