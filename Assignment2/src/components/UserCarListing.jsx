@@ -3,7 +3,7 @@ import { FilterSidebar } from "./FilterSidebar";
 import { CarsGrid } from "./CarsGrid";
 import { Header } from "./Header";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../redux/thunk";
+import { fetchProducts } from "../../redux/thunk";
 import { Memoised } from "./Memoised";
 import "../styles/UsedCarsListing.css";
 

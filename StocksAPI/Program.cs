@@ -61,9 +61,6 @@ if (app.Environment.IsDevelopment())
 // Redirect HTTP to HTTPS
 app.UseHttpsRedirection();
 
-// Enable authorization middleware (though no auth scheme is configured here)
-app.UseAuthorization();
-
 // Map controller endpoints
 app.MapControllers();
 

@@ -16,10 +16,10 @@ namespace StocksAPI.BAL.Services
     {
         private readonly IStockDAL _stockDAL;     // DAL layer for data operations
         private readonly IMapper _mapper;         // AutoMapper instance for DTO <-> Entity conversions
-        private readonly FinanceService.Protos.Finance.FinanceClient _grpcClient;  //GRPC Client 
+        private readonly Finance.FinanceClient _grpcClient;  // gRPC client for external business logic
 
         // Constructor with dependencies injected
-        public StockBAL(IStockDAL stockDAL, IMapper mapper, FinanceService.Protos.Finance.FinanceClient grpcClient)
+        public StockBAL(IStockDAL stockDAL, IMapper mapper, Finance.FinanceClient grpcClient)
         {
             _stockDAL = stockDAL ?? throw new ArgumentNullException(nameof(stockDAL));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -34,10 +34,9 @@ namespace StocksAPI.BAL.Services
         {
             try
             {
-                // Map input DTO to internal Filters entity
                 var filters = _mapper.Map<Filters>(request);
 
-                // Run queries in parallel: stocks list and total count
+                // Parallelize DB operations
                 var stocksTask = _stockDAL.GetStocksAsync(filters, request.PageNumber, request.PageSize);
                 var countTask = _stockDAL.GetStocksCountAsync(filters);
 
@@ -45,48 +44,26 @@ namespace StocksAPI.BAL.Services
 
                 var stocks = await stocksTask;
                 var totalCount = await countTask;
-
-                // Map entity list to DTOs
                 var stockDTOs = _mapper.Map<List<StockDTO>>(stocks);
-
 
                 var carIds = stocks.Select(s => s.Id).ToList();
 
-                if (!carIds.Any())
+                if (carIds.Any())
                 {
-                    return new StockSearchResponseDTO
+                    // Fetch value-for-money statuses using gRPC
+                    var valueMap = await GetValueForMoneyMapAsync(carIds);
+
+                    foreach (var stockDTO in stockDTOs)
                     {
-                        Stocks = new List<StockDTO>(),
-                        TotalCount = 0,
-                        PageNumber = request.PageNumber,
-                        PageSize = request.PageSize,
-                        TotalPages = 0,
-                        HasNextPage = false,
-                        HasPreviousPage = false
-                    };
-                }
-
-                var grpcRequest = new ValueForMoneyRequest();
-                grpcRequest.CarIds.AddRange(carIds);
-
-                // Use RPC Server To Determine Business Logic Value
-                var grpcResponse = await _grpcClient.GetIsValueForMoneyAsync(grpcRequest);
-
-                // Map the result back to DTOs
-                var valueMap = grpcResponse.CarStatuses.ToDictionary(c => c.Id, c => c.IsValueForMoney);
-
-                foreach (var stockDTO in stockDTOs)
-                {
-                    if (valueMap.TryGetValue(stockDTO.ProfileId, out var isValue))
-                    {
-                        stockDTO.IsValueForMoney = isValue;
+                        if (valueMap.TryGetValue(stockDTO.ProfileId, out var isValue))
+                        {
+                            stockDTO.IsValueForMoney = isValue;
+                        }
                     }
                 }
 
-                // Calculate total number of pages
                 var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
 
-                // Return fully constructed response DTO
                 return new StockSearchResponseDTO
                 {
                     Stocks = stockDTOs,
@@ -100,7 +77,6 @@ namespace StocksAPI.BAL.Services
             }
             catch (Exception ex)
             {
-                // Wrap and rethrow as business-layer-specific exception
                 throw new InvalidOperationException("Error occurred while searching stocks", ex);
             }
         }
@@ -112,23 +88,15 @@ namespace StocksAPI.BAL.Services
         {
             try
             {
-                // Fetch from DB
                 var stock = await _stockDAL.GetStockByIdAsync(id);
                 if (stock == null)
                     return null;
 
-                // Map entity to DTO
                 var stockDTO = _mapper.Map<StockDTO>(stock);
-                
-                // Prepare gRPC request to determine value for money    
-                var grpcRequest = new ValueForMoneyRequest();
-                grpcRequest.CarIds.Add(stock.Id);
 
-                // Call gRPC service to get value for money status
-                var grpcResponse = await _grpcClient.GetIsValueForMoneyAsync(grpcRequest);
-                var carStatus = grpcResponse.CarStatuses.FirstOrDefault(c => c.Id == stock.Id);
-
-                stockDTO.IsValueForMoney = carStatus?.IsValueForMoney ?? false; 
+                // Fetch value-for-money status using gRPC
+                var valueMap = await GetValueForMoneyMapAsync(new List<int> { stock.Id });
+                stockDTO.IsValueForMoney = valueMap.TryGetValue(stock.Id, out var isValue) && isValue;
 
                 return stockDTO;
             }
@@ -139,13 +107,18 @@ namespace StocksAPI.BAL.Services
         }
 
         /*
-         * Business rule to determine "value for money":
-         * Less than 10,000 km driven AND price under 2 lakh.
-         * NOTE: This is a placeholder and can be adjusted.
+         * Helper method to call gRPC service with a list of car IDs
+         * and retrieve a dictionary mapping each ID to its value-for-money status.
          */
-        private static bool DetermineValueForMoney(Stock stock)
+        private async Task<Dictionary<int, bool>> GetValueForMoneyMapAsync(List<int> carIds)
         {
-            return stock.Kilometers < 10000 && stock.Price < 200000;
+            var grpcRequest = new ValueForMoneyRequest();
+            grpcRequest.CarIds.AddRange(carIds);
+
+            var grpcResponse = await _grpcClient.GetIsValueForMoneyAsync(grpcRequest);
+
+            return grpcResponse.CarStatuses
+                .ToDictionary(c => c.Id, c => c.IsValueForMoney);
         }
     }
 }

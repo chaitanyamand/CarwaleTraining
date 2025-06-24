@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { SORT_BY_PRICE_LOW_TO_HIGH, SORT_BY_PRICE_HIGH_TO_LOW, SORT_BY_YEAR_NEWEST } from "../redux/actions";
+import { SORT_BY_PRICE_LOW_TO_HIGH, SORT_BY_PRICE_HIGH_TO_LOW, SORT_BY_YEAR_NEWEST } from "../../redux/actions";
 import { Memoised } from "./Memoised";
 import "../styles/Header.css";
 

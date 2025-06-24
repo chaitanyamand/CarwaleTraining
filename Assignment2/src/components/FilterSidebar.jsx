@@ -2,7 +2,7 @@ import { BudgetFilter } from "./BudgetFilter";
 import { Funnel } from "lucide-react";
 import { FuelFilter } from "./FuelFilter";
 import { useDispatch } from "react-redux";
-import { CHANGE_MAX_PRICE, CHANGE_MIN_PRICE, CLEAR_FILTERS } from "../redux/actions";
+import { CHANGE_MAX_PRICE, CHANGE_MIN_PRICE, CLEAR_FILTERS } from "../../redux/actions";
 import { Memoised } from "./Memoised";
 import { PopularChoiceButton } from "./PopularChoiceButton";
 import { FuelFilters } from "./FuelFilters";

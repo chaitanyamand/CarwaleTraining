@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { CAR_LIKED, CAR_UNLIKED } from "../redux/actions";
+import { CAR_LIKED, CAR_UNLIKED } from "../../redux/actions";
 import "../styles/CarCard.css";
 
 export const CarCard = ({ car = {}, id, isLiked = false }) => {
@@ -15,6 +15,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
       emiAmount = emiParts[3];
     }
   } catch (e) {
+    console.log(e);
     emiAmount = "N/A";
   }
 
@@ -30,8 +31,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
 
   return (
     <div className="car-card">
-      {car.isValueForMoney ? <div className="car-tag value-tag">Value For Money</div> : car.tagText ?
-        <div className="car-tag">{car.tagText}</div> : null}
+      {car.isValueForMoney ? <div className="car-tag value-tag">Value For Money</div> : car.tagText ? <div className="car-tag">{car.tagText}</div> : null}
 
       <button
         onClick={() =>
@@ -42,21 +42,10 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
         }
         className="heart-btn"
       >
-        <Heart
-          size={20}
-          fill={isLiked ? "#ff4757" : "none"}
-          color={isLiked ? "#ff4757" : "#666"}
-        />
+        <Heart size={20} fill={isLiked ? "#ff4757" : "none"} color={isLiked ? "#ff4757" : "#666"} />
       </button>
 
-      {imageUrl ? (
-        <img
-          src={imageUrl}
-          alt={`${car.makeYear || ""} ${car.carName || "Car"}`}
-          onError={handleImageError}
-          className="car-image"
-        />
-      ) : null}
+      {imageUrl ? <img src={imageUrl} alt={`${car.makeYear || ""} ${car.carName || "Car"}`} onError={handleImageError} className="car-image" /> : null}
 
       <div className="image-fallback" style={{ display: imageUrl ? "none" : "flex" }}>
         No Image Available

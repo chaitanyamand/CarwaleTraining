@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { CHANGE_MAX_PRICE, CHANGE_MIN_PRICE } from "../redux/actions";
+import { CHANGE_MAX_PRICE, CHANGE_MIN_PRICE } from "../../redux/actions";
 import { Memoised } from "./Memoised";
 import "../styles/BudgetFilter.css";
 

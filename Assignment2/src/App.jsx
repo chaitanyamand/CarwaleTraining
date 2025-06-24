@@ -1,4 +1,4 @@
-import UsedCarsListing from "../components/UserCarListing";
+import UsedCarsListing from "./components/UserCarListing";
 import store from "../redux/store";
 import { Provider } from "react-redux";
 
