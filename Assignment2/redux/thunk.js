@@ -10,7 +10,7 @@ export const fetchProducts = (inputUrl) => {
             const [minPrice, maxPrice] = filter.priceRange;
             const fuelParam = encodeURIComponent(fuelSelected.join("+"));
             const budgetParam = `${minPrice}-${maxPrice}`;
-            url = `http://localhost:5063/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
+            url = `http://localhost:5000/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
         }
 
         // Abort any ongoing request

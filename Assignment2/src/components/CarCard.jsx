@@ -13,6 +13,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
     const emiParts = car.emiText?.split(" ");
     if (emiParts && emiParts.length >= 4) {
       emiAmount = emiParts[3];
+      if (emiParts[4]) emiAmount += emiParts[4];
     }
   } catch (e) {
     console.log(e);

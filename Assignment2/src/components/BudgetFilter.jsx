@@ -8,6 +8,10 @@ export const BudgetFilter = Memoised(() => {
   const minPrice = useSelector((state) => state.filter.priceRange[0]);
   const maxPrice = useSelector((state) => state.filter.priceRange[1]);
 
+  // For range inputs, cap the values at 21
+  const rangeMinPrice = Math.min(minPrice, 21);
+  const rangeMaxPrice = Math.min(maxPrice, 21);
+
   return (
     <div className="budget-filter">
       <h4 className="budget-header">Budget</h4>
@@ -18,8 +22,8 @@ export const BudgetFilter = Memoised(() => {
         <div
           className="slider-range"
           style={{
-            left: `${(minPrice / 21) * 100}%`,
-            width: `calc(${((maxPrice - minPrice) / 21) * 100}% - 1px)`,
+            left: `${(rangeMinPrice / 21) * 100}%`,
+            width: `calc(${((rangeMaxPrice - rangeMinPrice) / 21) * 100}% - 1px)`,
           }}
         ></div>
 
@@ -27,7 +31,7 @@ export const BudgetFilter = Memoised(() => {
           type="range"
           min="0"
           max="21"
-          value={minPrice}
+          value={rangeMinPrice}
           onChange={(e) => {
             const value = parseInt(e.target.value);
             if (value <= maxPrice) {
@@ -41,7 +45,7 @@ export const BudgetFilter = Memoised(() => {
           type="range"
           min="0"
           max="21"
-          value={maxPrice}
+          value={rangeMaxPrice}
           onChange={(e) => {
             const value = parseInt(e.target.value);
             if (value >= minPrice) {
@@ -81,7 +85,7 @@ export const BudgetFilter = Memoised(() => {
             onChange={(e) => {
               const value = parseInt(e.target.value) || 0;
               if (value >= minPrice) {
-                dispatch({ type: CHANGE_MAX_PRICE, payload: { price: Math.min(21, value) } });
+                dispatch({ type: CHANGE_MAX_PRICE, payload: { price: Math.max(0, value) } });
               }
             }}
           />
