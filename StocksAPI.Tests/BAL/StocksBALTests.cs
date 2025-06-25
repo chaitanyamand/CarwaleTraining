@@ -1,4 +1,3 @@
-using Xunit;
 using Moq;
 using FluentAssertions;
 using AutoMapper;
@@ -8,10 +7,7 @@ using StocksAPI.DAL.Interfaces;
 using StocksAPI.DTOs;
 using StocksAPI.Entities;
 using FinanceService.Protos;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
+
 
 namespace StocksAPI.Tests.BAL
 {

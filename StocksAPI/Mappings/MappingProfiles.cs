@@ -65,7 +65,7 @@ namespace StocksAPI.Mappings
             }
             else if (price >= 100000) // 1 Lakh
             {
-                return $"Rs. {price / 100000:F1} L";
+                return $"Rs. {price / 100000:F1} Lakh";
             }
             else if (price >= 1000) // 1 Thousand
             {

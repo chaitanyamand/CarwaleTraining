@@ -1,28 +1,46 @@
 import { FETCH_PRODUCT_FAILURE, FETCH_PRODUCT_PENDING, FETCH_PRODUCT_SUCCESS } from "./actions";
 
-export const fetchProducts = () => {
+export const fetchProducts = (inputUrl) => {
     return (dispatch, getState) => {
-        dispatch({ type: FETCH_PRODUCT_PENDING });
+        const { filter, product } = getState();
 
-        const { filter } = getState();
-        const fuelSelected = Array.from(filter.fuelSelected);
-        const [minPrice, maxPrice] = filter.priceRange;
+        let url = inputUrl;
+        if (!url) {
+            const fuelSelected = Array.from(filter.fuelSelected);
+            const [minPrice, maxPrice] = filter.priceRange;
+            const fuelParam = encodeURIComponent(fuelSelected.join("+"));
+            const budgetParam = `${minPrice}-${maxPrice}`;
+            url = `http://localhost:5000/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
+        }
 
-        const fuelParam = encodeURIComponent(fuelSelected.join("+"));
-        const budgetParam = `${minPrice}-${maxPrice}`;
+        // Abort any ongoing request
+        if (product.requestController) {
+            product.requestController.abort();
+        }
 
-        const url = `http://localhost:5000/api/stocks?fuel=${fuelParam}&budget=${budgetParam}`;
+        const controller = new AbortController();
+        dispatch({ type: FETCH_PRODUCT_PENDING, payload: { requestController: controller } });
 
-        fetch(url)
+        // Set a timeout to abort the request if it takes too long
+        const timeoutId = setTimeout(() => {
+            if (product.requestController === controller) {
+                controller.abort();
+                dispatch({ type: FETCH_PRODUCT_FAILURE });
+            }
+        }, 3000);
+
+        fetch(url, { signal: controller.signal })
             .then((res) => res.json())
             .then((data) => {
-                const cars = data.stocks;
-                console.log(cars);
-                const totalNumber = data.totalCount;
-                dispatch({ type: FETCH_PRODUCT_SUCCESS, payload: { data: cars, totalNumber } });
+                clearTimeout(timeoutId);
+
+                dispatch({ type: FETCH_PRODUCT_SUCCESS, payload: { data: data.stocks, totalNumber: data.totalCount, nextPageUrl: data.nextPageUrl, prevPageUrl: data.previousPageUrl } });
             })
             .catch((err) => {
-                dispatch({ type: FETCH_PRODUCT_PENDING, error: err });
+                if (err.name !== "AbortError") {
+                    console.error("Fetch error:", err);
+                    dispatch({ type: FETCH_PRODUCT_FAILURE });
+                }
             });
     };
 };

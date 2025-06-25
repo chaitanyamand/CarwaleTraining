@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { ADD_FILTER_FUEL_TYPE, REMOVE_FILTER_FUEL_TYPE } from "../../redux/actions";
 import { Memoised } from "./Memoised";
-import "../styles/FuelFilter.css";
+import "../../styles/FuelFilter.css";
 
 export const FuelFilter = Memoised(({ fuelName, index, isChecked }) => {
   const dispatch = useDispatch();

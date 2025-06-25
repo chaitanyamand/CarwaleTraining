@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { FuelFilter } from "./FuelFilter";
-import "../styles/FuelFilters.css";
+import "../../styles/FuelFilters.css";
 
 export const FuelFilters = () => {
   const fuelSelected = useSelector((state) => state.filter.fuelSelected);

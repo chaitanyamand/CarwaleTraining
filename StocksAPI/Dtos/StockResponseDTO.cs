@@ -16,5 +16,8 @@ namespace StocksAPI.DTOs
         public List<string> StockImages { get; set; } = new List<string>();
         public bool HasPreviousPage { get; set; }
 
+        public string NextPageUrl { get; set; } = string.Empty;
+        public string PreviousPageUrl { get; set; } = string.Empty;
+
     }
 }

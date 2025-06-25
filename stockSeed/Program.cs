@@ -66,7 +66,10 @@ class Program
         var nextPage = FirstPage;
         var totalInserted = 0;
 
-        for (int i = 0; i < 10 && !string.IsNullOrWhiteSpace(nextPage); i++)
+        var insertedHashes = new HashSet<string>();
+        var fuelTypeCount = new Dictionary<FuelType, int>();
+
+        while (!string.IsNullOrWhiteSpace(nextPage))
         {
             try
             {
@@ -93,13 +96,38 @@ class Program
                             continue;
                         }
 
+                        if (string.IsNullOrWhiteSpace(stock.ImageUrl) || stock.StockImages == null || stock.StockImages.Count == 0)
+                        {
+                            Console.WriteLine("Skipping stock due to missing ImageUrl or StockImages.");
+                            continue;
+                        }
+
+                        var hashKey = $"{stock.MakeName}|{stock.ModelName}|{stock.MakeYear}|{stock.Price}|{stock.Kilometers}|{(int)stock.FuelType}|{stock.CityName}";
+                        if (insertedHashes.Contains(hashKey))
+                        {
+                            Console.WriteLine("Duplicate stock found. Skipping.");
+                            continue;
+                        }
+
+                        if (!fuelTypeCount.TryGetValue(stock.FuelType, out int currentCount))
+                            currentCount = 0;
+
+                        if (currentCount >= 40)
+                        {
+                            Console.WriteLine($"Fuel type limit reached for {stock.FuelType}. Skipping.");
+                            continue;
+                        }
+
                         var stockId = await SaveStockAsync(stock);
+                        insertedHashes.Add(hashKey);
+                        fuelTypeCount[stock.FuelType] = currentCount + 1;
                         totalInserted++;
-                        Console.WriteLine($"Inserted: {stock.MakeName} {stock.ModelName} ({stockId})");
+
+                        Console.WriteLine($"Inserted: {stock.MakeName} {stock.ModelName} (ID: {stockId})");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to insert stock: {ex.Message}");
+                        Console.WriteLine($"Error inserting stock: {ex.Message}");
                     }
                 }
 

@@ -1,7 +1,7 @@
 import { Heart } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { CAR_LIKED, CAR_UNLIKED } from "../../redux/actions";
-import "../styles/CarCard.css";
+import "../../styles/CarCard.css";
 
 export const CarCard = ({ car = {}, id, isLiked = false }) => {
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
 
         <div className="car-price-offer">
           <div>
-            <span className="car-price">Rs. {car.price || "N/A"}</span>
+            <span className="car-price">{car.formattedPrice || "N/A"}</span>
             <button className="make-offer-btn">Make Offer</button>
           </div>
         </div>

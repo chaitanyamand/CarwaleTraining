@@ -20,6 +20,20 @@
   padding-bottom: 1.25rem;
 }
 
+.pagination-controls {
+  display : flex;
+  justify-content: space-between;
+}
+
+.previous,.next {
+  background-color: #e84133;
+  color: white;
+  border: none;
+  border-radius : 0.25rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
 .loading-container,
 .error-container {
   text-align: center;

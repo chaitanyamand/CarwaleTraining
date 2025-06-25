@@ -5,7 +5,7 @@ import { Header } from "./Header";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/thunk";
 import { Memoised } from "./Memoised";
-import "../styles/UsedCarsListing.css";
+import "../../styles/UsedCarsListing.css";
 
 const UsedCarsListing = Memoised(() => {
   const dispatch = useDispatch();
