@@ -24,7 +24,7 @@ namespace StocksAPI.DAL.Repositories
          */
         public async Task<List<Stock>> GetStocksAsync(Filters filters, int pageNumber, int pageSize)
         {
-            var query = @"SELECT * FROM stocks
+            var query = @"SELECT Id, MakeName, ModelName,MakeYear,Price, Kilometers, FuelType, CityName, TagText, EmiText, ImageUrl FROM stocks
                           WHERE IsActive = 1
                           /**filters**/
                           ORDER BY CreatedDate DESC
@@ -55,7 +55,7 @@ namespace StocksAPI.DAL.Repositories
          */
         public async Task<int> GetStocksCountAsync(Filters filters)
         {
-            var query = @"SELECT COUNT(*) FROM stocks
+            var query = @"SELECT COUNT(*)  FROM stocks
                           WHERE IsActive = 1
                           /**filters**/";
 
@@ -75,7 +75,7 @@ namespace StocksAPI.DAL.Repositories
          */
         public async Task<Stock?> GetStockByIdAsync(int id)
         {
-            var query = @"SELECT * FROM stocks WHERE Id = @Id AND IsActive = 1";
+            var query = @"SELECT Id, MakeName, ModelName,MakeYear,Price, Kilometers, FuelType, CityName, TagText, EmiText, ImageUrl, StockImages FROM stocks WHERE Id = @Id AND IsActive = 1";
 
             using var connection = _context.CreateConnection();
 

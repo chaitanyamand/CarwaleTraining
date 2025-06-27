@@ -33,7 +33,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
   return (
     <div className="car-card">
       {car.isValueForMoney ? <div className="car-tag value-tag">Value For Money</div> : car.tagText ? <div className="car-tag">{car.tagText}</div> : null}
-
+      
       <button
         onClick={() =>
           dispatch({
@@ -46,7 +46,7 @@ export const CarCard = ({ car = {}, id, isLiked = false }) => {
         <Heart size={20} fill={isLiked ? "#ff4757" : "none"} color={isLiked ? "#ff4757" : "#666"} />
       </button>
 
-      {imageUrl ? <img src={imageUrl} alt={`${car.makeYear || ""} ${car.carName || "Car"}`} onError={handleImageError} className="car-image" /> : null}
+      {imageUrl ? <img src={imageUrl} alt={`${car.makeYear || ""} ${car.carName || "Car"}`} onError={handleImageError} className="car-image" loading="lazy"/> : null}
 
       <div className="image-fallback" style={{ display: imageUrl ? "none" : "flex" }}>
         No Image Available

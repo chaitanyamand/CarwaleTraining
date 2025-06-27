@@ -44,8 +44,9 @@ namespace StocksAPI.BAL.Services
 
                 await Task.WhenAll(stocksTask, countTask);
 
-                var stocks = await stocksTask;
-                var totalCount = await countTask;
+                var stocks = stocksTask.Result;
+                var totalCount = countTask.Result;
+                
                 var stockDTOs = _mapper.Map<List<StockDTO>>(stocks);
 
                 var carIds = stocks.Select(s => s.Id).ToList();
@@ -68,9 +69,6 @@ namespace StocksAPI.BAL.Services
                 var hasNextPage = request.PageNumber < totalPages;
                 var hasPreviousPage = request.PageNumber > 1;
 
-                Console.WriteLine($"Total Count: {totalCount}, Total Pages: {totalPages}, " +
-                                  $"Has Next: {hasNextPage}, Has Previous: {hasPreviousPage}");
-
                 // Generate navigation URLs
                 var nextPageUrl = hasNextPage ? GeneratePageUrl(request, request.PageNumber + 1) : null;
                 var previousPageUrl = hasPreviousPage ? GeneratePageUrl(request, request.PageNumber - 1) : null;
@@ -82,8 +80,6 @@ namespace StocksAPI.BAL.Services
                     PageNumber = request.PageNumber,
                     PageSize = request.PageSize,
                     TotalPages = totalPages,
-                    HasNextPage = hasNextPage,
-                    HasPreviousPage = hasPreviousPage,
                     NextPageUrl = nextPageUrl,
                     PreviousPageUrl = previousPageUrl
                 };

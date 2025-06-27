@@ -17,8 +17,9 @@ namespace StocksAPI.DTOs
         public string CityName { get; set; } = string.Empty;
         public bool IsValueForMoney { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public List<string> StockImages { get; set; } = new List<string>(); 
         public string ImageUrl { get; set; } = string.Empty;
-        public List<string> StockImages { get; set; } = new List<string>();
         public string EmiText { get; set; } = string.Empty; /* Formatted EMI text for display */
         public string TagText { get; set; } = string.Empty; /* Formatted Tag text for display */
     }
